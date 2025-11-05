@@ -8,7 +8,7 @@ public class Email {
 
     public Email(int idEmail, String email) {
         this.idEmail = idEmail;
-        Email = email;
+        this.Email = email;
     }
 
     public int getIdEmail() {
