@@ -7,7 +7,7 @@ Faz o clone do projeto<br>
 No config você coloca a senha do seu MySQL<br>
 Se estiver usando um JDK anterior da versão 11:<br>
   &emsp;Acesse o pom.xml<br>
-  &emsp;Nos trechos no parentese coloque o numero 11 no lugar do 17 (<source>/<target>/<maven.compiler.source>/<maven.compiler.target>)<br>
+  &emsp;Nos trechos no parentese coloque o numero 11 no lugar do 17 (source/target/maven.compiler.source/maven.compiler.target)<br>
 
 ### DECISÕES ESTRATEGICAS
 
