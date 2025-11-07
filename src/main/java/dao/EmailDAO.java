@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmailDAO {
+public class EmailDAO implements IEmailDAO{
 
     public Email inserir(Email email) {
         Connection conn = null;
