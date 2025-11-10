@@ -1,5 +1,7 @@
 package dao;
 
+import dao.InterfacesDAO.IAlunoDAO;
+import dao.InterfacesDAO.IEmailDAO;
 import model.Aluno;
 import model.Email;
 import util.Conexao;
@@ -7,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlunoDAO {
+public class AlunoDAO implements IAlunoDAO{
     private IEmailDAO emailDAO;
 
     // Construtor com injeção de dependência

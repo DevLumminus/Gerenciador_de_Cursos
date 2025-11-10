@@ -1,10 +1,10 @@
-package dao;
+package dao.InterfacesDAO;
 
 import model.Email;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface IEmailDAO {
+public interface IEmailDAO { //
     Email inserir(Email email);
     Email buscarPorId(int id);
     Email buscarPorEndereco(String enderecoEmail);
