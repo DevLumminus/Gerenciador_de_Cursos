@@ -1,12 +1,13 @@
 package dao;
 
+import dao.InterfacesDAO.IEmailDAO;
 import model.Email;
 import util.Conexao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmailDAO {
+public class EmailDAO implements IEmailDAO {
 
     public Email inserir(Email email) {
         Connection conn = null;
@@ -152,7 +153,6 @@ public class EmailDAO {
         return email;
     }
 
-    // MÉTODO ADICIONADO: Para uso em transações com AlunoDAO
     public Email inserirComTransacao(Connection conn, Email email) throws SQLException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -172,7 +172,6 @@ public class EmailDAO {
             }
             return email;
         } finally {
-            // Não fecha a conexão aqui - será fechada no AlunoDAO
             if (stmt != null) stmt.close();
             if (rs != null) rs.close();
         }

@@ -1,5 +1,7 @@
 package dao;
 
+import dao.InterfacesDAO.IAlunoDAO;
+import dao.InterfacesDAO.IEmailDAO;
 import model.Aluno;
 import model.Email;
 import util.Conexao;
@@ -7,15 +9,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlunoDAO {
+public class AlunoDAO implements IAlunoDAO{
+    private IEmailDAO emailDAO;
 
-    private EmailDAO emailDAO;
-
-    public AlunoDAO() {
-        this.emailDAO = new EmailDAO();
+    // Construtor com injeção de dependência
+    public AlunoDAO(IEmailDAO emailDAO) {
+        this.emailDAO = emailDAO;
     }
 
-    // MÉTODO ORIGINAL MANTIDO (para compatibilidade)
+    public static AlunoDAO criar() {
+        return new AlunoDAO(new EmailDAO());
+    }
+
+    public static AlunoDAO criarComMock(IEmailDAO emailDAO) {
+        return new AlunoDAO(emailDAO);
+    }
+
     public Aluno inserir(Aluno aluno) {
         // Valida se o email_id existe antes de inserir
         if (!emailExiste(aluno.getEmail())) {
@@ -52,7 +61,6 @@ public class AlunoDAO {
         return aluno;
     }
 
-    // NOVO MÉTODO: Inserir aluno com transação para criar email se necessário
     public Aluno inserirAlunoComEmail(Aluno aluno, String enderecoEmail) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -62,7 +70,6 @@ public class AlunoDAO {
             conn = Conexao.conectar();
             conn.setAutoCommit(false); // Inicia transação
 
-            // 1. Insere ou busca o email
             Email email = emailDAO.buscarPorEndereco(enderecoEmail);
             if (email == null) {
                 // Email não existe, cria um novo
@@ -105,7 +112,6 @@ public class AlunoDAO {
         }
     }
 
-    // MÉTODO ORIGINAL MANTIDO
     public Aluno buscarPorId(int id) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -135,7 +141,6 @@ public class AlunoDAO {
         return aluno;
     }
 
-    // NOVO MÉTODO: Busca aluno com JOIN para trazer o email real
     public Aluno buscarPorIdComEmail(int id) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -172,7 +177,6 @@ public class AlunoDAO {
         return aluno;
     }
 
-    // MÉTODO ORIGINAL MANTIDO
     public List<Aluno> listarTodos() {
         List<Aluno> alunos = new ArrayList<>();
         Connection conn = null;
@@ -203,7 +207,6 @@ public class AlunoDAO {
         return alunos;
     }
 
-    // NOVO MÉTODO: Listar alunos com JOIN para trazer emails reais
     public List<Aluno> listarTodosComEmail() {
         List<Aluno> alunos = new ArrayList<>();
         Connection conn = null;
@@ -241,7 +244,6 @@ public class AlunoDAO {
         return alunos;
     }
 
-    // MÉTODO ATUALIZADO: Com validação de email
     public boolean atualizar(Aluno aluno) {
         // Valida se o novo email_id existe
         if (!emailExiste(aluno.getEmail())) {
@@ -271,7 +273,6 @@ public class AlunoDAO {
         }
     }
 
-    // MÉTODO ORIGINAL MANTIDO
     public boolean excluir(int id) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -291,7 +292,6 @@ public class AlunoDAO {
         }
     }
 
-    // MÉTODO ORIGINAL MANTIDO
     public Aluno buscarPorCpf(String cpf) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -321,7 +321,6 @@ public class AlunoDAO {
         return aluno;
     }
 
-    // NOVO MÉTODO: Buscar por CPF com email real
     public Aluno buscarPorCpfComEmail(String cpf) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -357,7 +356,6 @@ public class AlunoDAO {
         return aluno;
     }
 
-    // MÉTODO ORIGINAL MANTIDO
     public List<Aluno> buscarPorNome(String nome) {
         List<Aluno> alunos = new ArrayList<>();
         Connection conn = null;
@@ -389,11 +387,6 @@ public class AlunoDAO {
         return alunos;
     }
 
-    // MÉTODOS AUXILIARES DE VALIDAÇÃO
-
-    /**
-     * Verifica se um email_id existe na tabela email
-     */
     private boolean emailExiste(int idEmail) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -417,9 +410,6 @@ public class AlunoDAO {
         return false;
     }
 
-    /**
-     * Busca o endereço de email real a partir do ID do aluno
-     */
     public String buscarEnderecoEmailPorAlunoId(int idAluno) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -445,9 +435,6 @@ public class AlunoDAO {
         return null;
     }
 
-    /**
-     * Verifica se já existe um aluno com o CPF informado
-     */
     public boolean cpfExiste(String cpf) {
         Connection conn = null;
         PreparedStatement stmt = null;

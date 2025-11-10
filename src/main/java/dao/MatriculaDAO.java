@@ -1,12 +1,13 @@
 package dao;
 
+import dao.InterfacesDAO.IMatriculaDAO;
 import model.Matricula;
 import util.Conexao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatriculaDAO {
+public class MatriculaDAO implements IMatriculaDAO {
 
     public Matricula inserir(Matricula matricula) {
         Connection conn = null;

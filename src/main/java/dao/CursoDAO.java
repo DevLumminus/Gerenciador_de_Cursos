@@ -1,12 +1,13 @@
 package dao;
 
+import dao.InterfacesDAO.ICursoDAO;
 import model.Cursos;
 import util.Conexao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CursoDAO {
+public class CursoDAO implements ICursoDAO {
 
     public Cursos inserir(Cursos curso) {
         Connection conn = null;
