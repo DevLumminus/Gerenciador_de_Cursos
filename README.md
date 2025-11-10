@@ -12,7 +12,7 @@ Se estiver usando um JDK anterior da versão 11:<br>
 ### DECISÕES ESTRATEGICAS
 
 Não colocar exibição no model de email (somente simula um multidado) <br>
-Criei a interface "IEmailDAO" para evitar o auto acoplamento (Aluno é altamente dependente de Email por causa da FK)<br>
+Criei as interfaces para evitar o auto acoplamento (A mais importante é a IEmailDAO por causa que Aluno é altamente dependente de Email por causa da FK)<br>
 
 ### O QUE APRENDI?
 
