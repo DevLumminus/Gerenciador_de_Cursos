@@ -25,7 +25,7 @@ public class Conexao {
 
             // Tentativa 2: Se não encontrou no classpath, tenta caminho relativo
             if (input == null) {
-                System.out.println("🔍 Tentando carregar config.properties do diretório do projeto...");
+                System.out.println("Tentando carregar config.properties do diretório do projeto...");
                 File configFile = new File("src/resources/config.properties");
                 if (configFile.exists()) {
                     input = new java.io.FileInputStream(configFile);
@@ -34,7 +34,7 @@ public class Conexao {
 
             // Tentativa 3: Tenta caminho absoluto
             if (input == null) {
-                System.out.println("🔍 Tentando caminho absoluto...");
+                System.out.println("Tentando caminho absoluto...");
                 File configFile = new File("C:/Users/Andre/Downloads/Gerenciador de Curso/Gerenciador_de_Cursos/src/resources/config.properties");
                 if (configFile.exists()) {
                     input = new java.io.FileInputStream(configFile);
@@ -42,8 +42,8 @@ public class Conexao {
             }
 
             if (input == null) {
-                System.err.println("❌ ERRO: Arquivo config.properties não encontrado em nenhum local!");
-                System.err.println("📍 Diretório atual: " + new File(".").getAbsolutePath());
+                System.err.println("ERRO: Arquivo config.properties não encontrado em nenhum local!");
+                System.err.println("Diretório atual: " + new File(".").getAbsolutePath());
                 return;
             }
 
@@ -56,17 +56,16 @@ public class Conexao {
             driver = props.getProperty("db.driver");
 
             if (url == null || user == null || password == null || driver == null) {
-                System.err.println("❌ ERRO: Propriedades não encontradas no arquivo config.properties");
+                System.err.println("ERRO: Propriedades não encontradas no arquivo config.properties");
                 return;
             }
 
             // Registra o driver JDBC
             Class.forName(driver);
-            System.out.println("✅ Driver JDBC carregado com sucesso: " + driver);
-            System.out.println("✅ Configurações carregadas - URL: " + url);
+            System.out.println("Driver JDBC carregado com sucesso: " + driver);
 
         } catch (Exception e) {
-            System.err.println("❌ Erro ao carregar configuração do banco: " + e.getMessage());
+            System.err.println("Erro ao carregar configuração do banco: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -76,16 +75,14 @@ public class Conexao {
             throw new SQLException("Configuração do banco de dados não carregada corretamente");
         }
 
-        System.out.println("🔗 Tentando conectar em: " + url);
-        System.out.println("👤 Usuário: " + user);
 
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✅ Conexão estabelecida com sucesso!");
+            System.out.println("Conexão estabelecida com sucesso!");
             return conn;
         } catch (SQLException e) {
-            System.err.println("❌ Erro na conexão: " + e.getMessage());
-            System.err.println("💡 Verifique se:");
+            System.err.println("Erro na conexão: " + e.getMessage());
+            System.err.println("Verifique se:");
             System.err.println("   - MySQL está rodando");
             System.err.println("   - Banco 'plataformac' existe");
             System.err.println("   - Usuário e senha estão corretos");
@@ -108,19 +105,6 @@ public class Conexao {
             if (conn != null) conn.close();
         } catch (Exception e) {
             System.err.println("Erro ao fechar Connection: " + e.getMessage());
-        }
-    }
-
-    // Método para testar a conexão
-    public static void testarConexao() {
-        Connection conn = null;
-        try {
-            conn = conectar();
-            System.out.println("🎉 Teste de conexão: SUCESSO!");
-        } catch (SQLException e) {
-            System.err.println("💥 Teste de conexão: FALHA - " + e.getMessage());
-        } finally {
-            fechar(conn, null, null);
         }
     }
 }
