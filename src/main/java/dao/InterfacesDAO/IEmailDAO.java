@@ -3,6 +3,7 @@ package dao.InterfacesDAO;
 import model.Email;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface IEmailDAO { //
     Email inserir(Email email);
@@ -11,4 +12,5 @@ public interface IEmailDAO { //
     Email inserirComTransacao(Connection conn, Email email) throws SQLException;
     boolean atualizar(Email email);
     boolean excluir(int id);
+    List<Email> listarTodos();
 }
