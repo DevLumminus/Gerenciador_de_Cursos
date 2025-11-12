@@ -13,6 +13,7 @@ Se estiver usando um JDK anterior da versão 11:<br>
 
 Não colocar exibição no model de email (somente simula um multidado) <br>
 Criei as interfaces para evitar o auto acoplamento (A mais importante é a IEmailDAO por causa que Aluno é altamente dependente de Email por causa da FK)<br>
+Por causa da baixa agragação aos padrões GRASP, foi decidido a retirada as interfaces de controller (manter a coesão e melhorar a eficiencia) - segue o modelo que levamos em conta (KISS)<br>
 
 ### O QUE APRENDI?
 
