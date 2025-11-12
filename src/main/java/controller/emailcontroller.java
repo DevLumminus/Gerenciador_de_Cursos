@@ -9,7 +9,7 @@ public class emailcontroller extends controllerbase<Email> {
 
     private final IEmailDAO emailDAO;
 
-    // ✅ Construtor recebe DAO diretamente
+    // Construtor recebe DAO diretamente
     public emailcontroller(IEmailDAO emailDAO) {
         if (emailDAO == null) {
             throw new IllegalArgumentException("DAO de email não pode ser nulo");
@@ -39,7 +39,6 @@ public class emailcontroller extends controllerbase<Email> {
         return emailDAO.listarTodos();
     }
 
-    // ✅ Método para compatibilidade
     public List<Email> listarTodasporEmails() {
         return emailDAO.listarTodos();
     }
@@ -56,7 +55,7 @@ public class emailcontroller extends controllerbase<Email> {
         return emailDAO.excluir(id);
     }
 
-    // ✅ VALIDAÇÕES ESPECÍFICAS
+    // VALIDAÇÕES ESPECÍFICAS
     private void validarEmail(Email email) {
         if (email == null) {
             throw new IllegalArgumentException("Email não pode ser nulo");
