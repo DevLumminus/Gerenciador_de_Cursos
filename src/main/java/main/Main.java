@@ -6,15 +6,15 @@ import view.SistemaEscola;
 public class Main {
     public static void main(String[] args) {
         try {
-            // ✅ Cria o controller principal (injeta todas as dependências)
+            // Acessa o controller principal
             ControllerPrincipal controller = new ControllerPrincipal();
 
-            // ✅ Cria a view e inicia o sistema
+            // Cria a view e inicia o sistema
             SistemaEscola sistema = new SistemaEscola(controller);
             sistema.iniciarSistema();
 
         } catch (Exception e) {
-            System.err.println("❌ Erro ao iniciar o sistema: " + e.getMessage());
+            System.err.println("Erro ao iniciar o sistema: " + e.getMessage());
             e.printStackTrace();
         }
     }
