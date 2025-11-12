@@ -11,13 +11,13 @@ public class ControllerPrincipal {
     private final emailcontroller emailController;
 
     public ControllerPrincipal() {
-        // ✅ Criar DAOs diretamente
+        // Criar DAOs diretamente
         EmailDAO emailDAO = new EmailDAO();
         AlunoDAO alunoDAO = new AlunoDAO(emailDAO);
         CursoDAO cursoDAO = new CursoDAO();
         MatriculaDAO matriculaDAO = new MatriculaDAO();
 
-        // ✅ Injeta DAOs nos controllers
+        // Chamada de DAOs nos controllers
         this.emailController = new emailcontroller(emailDAO);
         this.alunoController = new alunocontroller(alunoDAO, emailDAO);
         this.cursoController = new cursocontroller(cursoDAO);
