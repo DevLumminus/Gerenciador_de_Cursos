@@ -9,7 +9,7 @@ public class cursocontroller extends controllerbase<Cursos> {
 
     private final ICursoDAO cursoDAO;
 
-    // ✅ Construtor recebe DAO diretamente
+    // Construtor recebe DAO diretamente
     public cursocontroller(ICursoDAO cursoDAO) {
         if (cursoDAO == null) {
             throw new IllegalArgumentException("DAO de curso não pode ser nulo");
@@ -34,7 +34,6 @@ public class cursocontroller extends controllerbase<Cursos> {
         return cursoDAO.listarTodos();
     }
 
-    // ✅ Método para compatibilidade
     public List<Cursos> listarTodasCurso() {
         return cursoDAO.listarTodos();
     }
@@ -90,7 +89,7 @@ public class cursocontroller extends controllerbase<Cursos> {
         return cursoDAO.buscarPorId(idCurso) != null;
     }
 
-    // ✅ VALIDAÇÕES ESPECÍFICAS
+    // VALIDAÇÕES ESPECÍFICAS
     private void validarCurso(Cursos curso) {
         if (curso == null) {
             throw new IllegalArgumentException("Curso não pode ser nulo");
