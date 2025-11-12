@@ -38,7 +38,7 @@ public class SistemaEscola {
         }
     }
 
-    // 🏠 MENU PRINCIPAL - ALTA COESÃO
+    // MENU PRINCIPAL - ALTA COESÃO
     private void exibirMenuPrincipal() {
         System.out.println("\nMENU PRINCIPAL");
         System.out.println("1 - Gestão de Alunos");
@@ -51,7 +51,7 @@ public class SistemaEscola {
         System.out.println("----------------------------");
     }
 
-    // 👨‍🎓 MENU ALUNOS - CRUD COMPLETO
+    // MENU ALUNOS
     private void menuAlunos() {
         while (true) {
             System.out.println("\nGESTÃO DE ALUNOS");
@@ -80,7 +80,7 @@ public class SistemaEscola {
         }
     }
 
-    // 📚 MENU CURSOS - CRUD COMPLETO
+    // MENU CURSOS
     private void menuCursos() {
         while (true) {
             System.out.println("\nGESTÃO DE CURSOS");
@@ -113,7 +113,7 @@ public class SistemaEscola {
         }
     }
 
-    // 🎫 MENU MATRÍCULAS - CRUD ESPECIALIZADO
+    // MENU MATRÍCULAS
     private void menuMatriculas() {
         while (true) {
             System.out.println("\nGESTÃO DE MATRÍCULAS");
@@ -142,7 +142,7 @@ public class SistemaEscola {
         }
     }
 
-    // 📧 MENU EMAILS - CRUD ESPECIALIZADO
+    // MENU EMAILS
     private void menuEmails() {
         while (true) {
             System.out.println("\nGESTÃO DE EMAILS");
@@ -169,7 +169,7 @@ public class SistemaEscola {
         }
     }
 
-    // ✅ MÉTODOS PARA ALUNOS - BAIXO ACOPLAMENTO
+    //MÉTODOS PARA ALUNOS - BAIXO ACOPLAMENTO
     private void listarAlunos() {
         try {
             List<Aluno> alunos = controller.getAlunoController().listarTodos();
@@ -290,7 +290,7 @@ public class SistemaEscola {
         }
     }
 
-    // ✅ MÉTODOS PARA CURSOS
+    //MÉTODOS PARA CURSOS
     private void listarCursos() {
         try {
             List<Cursos> cursos = controller.getCursoController().listarTodos();
@@ -468,7 +468,7 @@ public class SistemaEscola {
         }
     }
 
-    // ✅ MÉTODOS PARA MATRÍCULAS
+    //MÉTODOS PARA MATRÍCULAS
     private void listarMatriculas() {
         try {
             List<Matricula> matriculas = controller.getMatriculaController().listarTodos();
@@ -580,7 +580,7 @@ public class SistemaEscola {
         }
     }
 
-    // ✅ MÉTODOS PARA EMAILS
+    // MÉTODOS PARA EMAILS
     private void listarEmails() {
         try {
             List<Email> emails = controller.getEmailController().listarTodos();
@@ -678,7 +678,7 @@ public class SistemaEscola {
         }
     }
 
-    // 🎯 MÉTODOS ESPECIAIS DO CONTROLLER PRINCIPAL
+    // MÉTODOS ESPECIAIS DO CONTROLLER PRINCIPAL
     private void realizarMatriculaCompleta() {
         try {
             System.out.println("\nMATRÍCULA COMPLETA");
@@ -703,7 +703,7 @@ public class SistemaEscola {
         }
     }
 
-    // 🔧 MÉTODOS AUXILIARES - ALTA COESÃO
+    // MÉTODOS AUXILIARES - ALTA COESÃO
     private int lerInteiro(String mensagem) {
         while (true) {
             try {
