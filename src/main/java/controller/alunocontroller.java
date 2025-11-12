@@ -10,7 +10,7 @@ public class alunocontroller extends controllerbase<Aluno> {
     private final IAlunoDAO alunoDAO;
     private final IEmailDAO emailDAO;
 
-    // ✅ Construtor recebe DAOs diretamente
+    // Construtor recebe DAOs diretamente
     public alunocontroller(IAlunoDAO alunoDAO, IEmailDAO emailDAO) {
         if (alunoDAO == null || emailDAO == null) {
             throw new IllegalArgumentException("DAOs não podem ser nulos");
@@ -19,7 +19,7 @@ public class alunocontroller extends controllerbase<Aluno> {
         this.emailDAO = emailDAO;
     }
 
-    // 🎯 MÉTODO PRINCIPAL: Matricular aluno com email
+    // MÉTODO PRINCIPAL: Matricular aluno com email
     public Aluno matricularAlunoComEmail(String nome, String telefone, String cpf, String enderecoEmail) {
         validarDadosAluno(nome, telefone, cpf, enderecoEmail);
 
@@ -100,7 +100,7 @@ public class alunocontroller extends controllerbase<Aluno> {
         return aluno != null && alunoDAO.buscarEnderecoEmailPorAlunoId(idAluno) != null;
     }
 
-    // ✅ VALIDAÇÕES ESPECÍFICAS
+    // VALIDAÇÕES ESPECÍFICAS
     private void validarDadosAluno(String nome, String telefone, String cpf, String email) {
         validacaoStringNaoVazia(nome, "Nome");
         validacaoStringNaoVazia(telefone, "Telefone");
