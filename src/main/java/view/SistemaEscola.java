@@ -1,895 +1,728 @@
 package view;
 
-import controller.ControladorEscola;
+import controller.ControllerPrincipal;
 import model.*;
 import java.util.List;
 import java.util.Scanner;
 
 public class SistemaEscola {
-    private ControladorEscola controlador;
-    private Scanner scanner;
+    private final ControllerPrincipal controller;
+    private final Scanner scanner;
 
-    public SistemaEscola() {
-        this.controlador = new ControladorEscola();
+    public SistemaEscola(ControllerPrincipal controller) {
+        this.controller = controller;
         this.scanner = new Scanner(System.in);
     }
 
-    public void exibirMenuPrincipal() {
-        int opcao;
-        do {
-            System.out.println("\n🎓 SISTEMA DE CONTROLE DE CURSOS 🎓");
-            System.out.println("=====================================");
-            System.out.println("1. 📚 Menu Cursos");
-            System.out.println("2. 👨‍🎓 Menu Alunos");
-            System.out.println("3. 📧 Menu Emails");
-            System.out.println("4. 📋 Menu Matrículas");
-            System.out.println("5. 📊 Relatórios Gerais");
-            System.out.println("0. ❌ Sair");
-            System.out.println("=====================================");
-            System.out.print("Escolha uma opção: ");
+    //MÉTODO PRINCIPAL - PADRÃO CONTROLLER
+    public void iniciarSistema() {
+        System.out.println("SISTEMA DE GESTÃO ACADÊMICA");
 
-            opcao = lerInteiro();
+        while (true) {
+            exibirMenuPrincipal();
+            int opcao = lerInteiro("Escolha uma opção: ");
 
             switch (opcao) {
-                case 1 -> menuCursos();
-                case 2 -> menuAlunos();
-                case 3 -> menuEmails();
-                case 4 -> menuMatriculas();
-                case 5 -> menuRelatorios();
-                case 0 -> System.out.println("Saindo do sistema...");
-                default -> System.out.println("❌ Opção inválida!");
-            }
-        } while (opcao != 0);
-    }
-
-    // ========== MENU CURSOS ==========
-    private void menuCursos() {
-        int opcao;
-        do {
-            System.out.println("\n📚 MENU CURSOS");
-            System.out.println("==================");
-            System.out.println("1. ➕ Cadastrar Curso");
-            System.out.println("2. 📋 Listar Todos os Cursos");
-            System.out.println("3. 🔍 Buscar Curso por ID");
-            System.out.println("4. 📝 Atualizar Curso");
-            System.out.println("5. 🚫 Desativar/Ativar Curso");
-            System.out.println("6. ❌ Excluir Curso");
-            System.out.println("7. ✅ Listar Cursos Ativos");
-            System.out.println("8. 🔎 Buscar por Tipo");
-            System.out.println("0. ↩️ Voltar");
-            System.out.println("==================");
-            System.out.print("Escolha uma opção: ");
-
-            opcao = lerInteiro();
-
-            switch (opcao) {
-                case 1 -> cadastrarCurso();
-                case 2 -> listarTodosCursos();
-                case 3 -> buscarCursoPorId();
-                case 4 -> atualizarCurso();
-                case 5 -> ativarDesativarCurso();
-                case 6 -> excluirCurso();
-                case 7 -> listarCursosAtivos();
-                case 8 -> buscarCursosPorTipo();
-                case 0 -> System.out.println("Voltando ao menu principal...");
-                default -> System.out.println("❌ Opção inválida!");
-            }
-        } while (opcao != 0);
-    }
-
-    private void cadastrarCurso() {
-        System.out.println("\n➕ CADASTRAR NOVO CURSO");
-        System.out.print("Nome do curso: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Tipo do curso: ");
-        String tipo = scanner.nextLine();
-
-        try {
-            Cursos curso = controlador.cadastrarCurso(nome, tipo);
-            System.out.println("✅ Curso cadastrado com sucesso! ID: " + curso.getIdCursos());
-        } catch (Exception e) {
-            System.out.println("❌ Erro ao cadastrar curso: " + e.getMessage());
-        }
-    }
-
-    private void listarTodosCursos() {
-        System.out.println("\n📋 LISTA DE TODOS OS CURSOS");
-        List<Cursos> cursos = controlador.listarTodosCursos();
-
-        if (cursos.isEmpty()) {
-            System.out.println("Nenhum curso cadastrado.");
-        } else {
-            for (Cursos curso : cursos) {
-                System.out.println("-----------------------------------");
-                System.out.println(curso.toString());
-            }
-        }
-    }
-
-    private void buscarCursoPorId() {
-        System.out.println("\n🔍 BUSCAR CURSO POR ID");
-        System.out.print("Digite o ID do curso: ");
-        int id = lerInteiro();
-
-        Cursos curso = controlador.buscarCursoPorId(id);
-        if (curso != null) {
-            System.out.println("✅ Curso encontrado:");
-            System.out.println(curso.toString());
-        } else {
-            System.out.println("❌ Curso não encontrado!");
-        }
-    }
-
-    private void atualizarCurso() {
-        System.out.println("\n📝 ATUALIZAR CURSO");
-        System.out.print("Digite o ID do curso a ser atualizado: ");
-        int id = lerInteiro();
-
-        Cursos curso = controlador.buscarCursoPorId(id);
-        if (curso == null) {
-            System.out.println("❌ Curso não encontrado!");
-            return;
-        }
-
-        System.out.println("Curso atual: " + curso.toString());
-        System.out.print("Novo nome (enter para manter atual): ");
-        String novoNome = scanner.nextLine();
-        if (!novoNome.trim().isEmpty()) {
-            curso.setNome(novoNome);
-        }
-
-        System.out.print("Novo tipo (enter para manter atual): ");
-        String novoTipo = scanner.nextLine();
-        if (!novoTipo.trim().isEmpty()) {
-            curso.setTipo(novoTipo);
-        }
-
-        try {
-            if (controlador.atualizarCurso(curso)) {
-                System.out.println("✅ Curso atualizado com sucesso!");
-            } else {
-                System.out.println("❌ Erro ao atualizar curso!");
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Erro: " + e.getMessage());
-        }
-    }
-
-    private void ativarDesativarCurso() {
-        System.out.println("\n🚫 ATIVAR/DESATIVAR CURSO");
-        System.out.print("Digite o ID do curso: ");
-        int id = lerInteiro();
-
-        Cursos curso = controlador.buscarCursoPorId(id);
-        if (curso == null) {
-            System.out.println("❌ Curso não encontrado!");
-            return;
-        }
-
-        System.out.println("Status atual: " + (curso.isAtivação() ? "ATIVO" : "INATIVO"));
-        System.out.print("Deseja " + (curso.isAtivação() ? "DESATIVAR" : "ATIVAR") + " o curso? (s/n): ");
-        String confirmacao = scanner.nextLine();
-
-        if (confirmacao.equalsIgnoreCase("s")) {
-            try {
-                boolean sucesso;
-                if (curso.isAtivação()) {
-                    sucesso = controlador.desativarCurso(id);
-                } else {
-                    sucesso = controlador.ativarCurso(id);
+                case 1 -> menuAlunos();
+                case 2 -> menuCursos();
+                case 3 -> menuMatriculas();
+                case 4 -> menuEmails();
+                case 5 -> realizarMatriculaCompleta();
+                case 6 -> gerarRelatorio();
+                case 0 -> {
+                    System.out.println("Saindo do sistema...");
+                    return;
                 }
-
-                if (sucesso) {
-                    System.out.println("✅ Curso " + (curso.isAtivação() ? "desativado" : "ativado") + " com sucesso!");
-                } else {
-                    System.out.println("❌ Erro ao alterar status do curso!");
-                }
-            } catch (Exception e) {
-                System.out.println("❌ Erro: " + e.getMessage());
+                default -> System.err.println("Opção inválida!");
             }
         }
     }
 
-    private void excluirCurso() {
-        System.out.println("\n❌ EXCLUIR CURSO");
-        System.out.print("Digite o ID do curso a ser excluído: ");
-        int id = lerInteiro();
-
-        System.out.print("⚠️  Tem certeza que deseja excluir o curso? (s/n): ");
-        String confirmacao = scanner.nextLine();
-
-        if (confirmacao.equalsIgnoreCase("s")) {
-            try {
-                if (controlador.excluirCurso(id)) {
-                    System.out.println("✅ Curso excluído com sucesso!");
-                } else {
-                    System.out.println("❌ Erro ao excluir curso!");
-                }
-            } catch (Exception e) {
-                System.out.println("❌ Erro: " + e.getMessage());
-            }
-        }
+    // 🏠 MENU PRINCIPAL - ALTA COESÃO
+    private void exibirMenuPrincipal() {
+        System.out.println("\nMENU PRINCIPAL");
+        System.out.println("1 - Gestão de Alunos");
+        System.out.println("2  - Gestão de Cursos");
+        System.out.println("3  - Gestão de Matrículas");
+        System.out.println("4 - Gestão de Emails");
+        System.out.println("5  - Realizar Matrícula Completa");
+        System.out.println("6  - Relatórios");
+        System.out.println("0  - Sair");
+        System.out.println("----------------------------");
     }
 
-    private void listarCursosAtivos() {
-        System.out.println("\n✅ CURSOS ATIVOS");
-        List<Cursos> cursos = controlador.listarCursosAtivos();
-
-        if (cursos.isEmpty()) {
-            System.out.println("Nenhum curso ativo no momento.");
-        } else {
-            for (Cursos curso : cursos) {
-                System.out.println("-----------------------------------");
-                System.out.println(curso.toString());
-            }
-        }
-    }
-
-    private void buscarCursosPorTipo() {
-        System.out.println("\n🔎 BUSCAR CURSOS POR TIPO");
-        System.out.print("Digite o tipo: ");
-        String tipo = scanner.nextLine();
-
-        List<Cursos> cursos = controlador.buscarCursosPorTipo(tipo);
-
-        if (cursos.isEmpty()) {
-            System.out.println("Nenhum curso encontrado com o tipo: " + tipo);
-        } else {
-            System.out.println("Cursos encontrados:");
-            for (Cursos curso : cursos) {
-                System.out.println("-----------------------------------");
-                System.out.println(curso.toString());
-            }
-        }
-    }
-
-    // ========== MENU ALUNOS ==========
+    // 👨‍🎓 MENU ALUNOS - CRUD COMPLETO
     private void menuAlunos() {
-        int opcao;
-        do {
-            System.out.println("\n👨‍🎓 MENU ALUNOS");
-            System.out.println("==================");
-            System.out.println("1. ➕ Cadastrar Aluno (com email)");
-            System.out.println("2. ➕ Cadastrar Aluno (email existente)");
-            System.out.println("3. 📋 Listar Todos os Alunos");
-            System.out.println("4. 🔍 Buscar Aluno por ID");
-            System.out.println("5. 🔍 Buscar Aluno por CPF");
-            System.out.println("6. 🔎 Buscar Alunos por Nome");
-            System.out.println("7. 📝 Atualizar Aluno");
-            System.out.println("8. ❌ Excluir Aluno");
-            System.out.println("0. ↩️ Voltar");
-            System.out.println("==================");
-            System.out.print("Escolha uma opção: ");
+        while (true) {
+            System.out.println("\nGESTÃO DE ALUNOS");
+            System.out.println("1 - Listar todos os alunos");
+            System.out.println("2 - Buscar aluno por ID");
+            System.out.println("3 - Buscar aluno por CPF");
+            System.out.println("4 - Cadastrar novo aluno");
+            System.out.println("5 - Atualizar aluno");
+            System.out.println("6 - Excluir aluno");
+            System.out.println("7 - Validar aluno para matrícula");
+            System.out.println("0 - Voltar ao menu principal");
 
-            opcao = lerInteiro();
+            int opcao = lerInteiro("Escolha: ");
 
             switch (opcao) {
-                case 1 -> cadastrarAlunoCompleto();
-                case 2 -> cadastrarAlunoComEmailExistente();
-                case 3 -> listarTodosAlunos();
-                case 4 -> buscarAlunoPorId();
-                case 5 -> buscarAlunoPorCpf();
-                case 6 -> buscarAlunosPorNome();
-                case 7 -> atualizarAluno();
-                case 8 -> excluirAluno();
-                case 0 -> System.out.println("Voltando ao menu principal...");
-                default -> System.out.println("❌ Opção inválida!");
+                case 1 -> listarAlunos();
+                case 2 -> buscarAlunoPorId();
+                case 3 -> buscarAlunoPorCpf();
+                case 4 -> cadastrarAluno();
+                case 5 -> atualizarAluno();
+                case 6 -> excluirAluno();
+                case 7 -> validarAlunoParaMatricula();
+                case 0 -> { return; }
+                default -> System.err.println("Opção inválida!");
             }
-        } while (opcao != 0);
-    }
-
-    private void cadastrarAlunoCompleto() {
-        System.out.println("\n➕ CADASTRAR ALUNO COMPLETO");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Telefone: ");
-        String telefone = scanner.nextLine();
-
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
-
-        System.out.print("CPF: ");
-        String cpf = scanner.nextLine();
-
-        try {
-            Aluno aluno = controlador.cadastrarAlunoCompleto(nome, telefone, email, cpf);
-            System.out.println("✅ Aluno cadastrado com sucesso! ID: " + aluno.getIdAlunos());
-        } catch (Exception e) {
-            System.out.println("❌ Erro ao cadastrar aluno: " + e.getMessage());
         }
     }
 
-    private void cadastrarAlunoComEmailExistente() {
-        System.out.println("\n➕ CADASTRAR ALUNO COM EMAIL EXISTENTE");
+    // 📚 MENU CURSOS - CRUD COMPLETO
+    private void menuCursos() {
+        while (true) {
+            System.out.println("\nGESTÃO DE CURSOS");
+            System.out.println("1 - Listar todos os cursos");
+            System.out.println("2 - Listar cursos ativos");
+            System.out.println("3 - Listar cursos inativos");
+            System.out.println("4 - Buscar curso por ID");
+            System.out.println("5 - Buscar curso por nome");
+            System.out.println("6 - Cadastrar novo curso");
+            System.out.println("7 - Atualizar curso");
+            System.out.println("8 - Ativar/Desativar curso");
+            System.out.println("9 - Excluir curso");
+            System.out.println("0 - Voltar ao menu principal");
 
-        // Listar emails disponíveis
-        List<Email> emails = controlador.listarTodosEmails();
-        if (emails.isEmpty()) {
-            System.out.println("❌ Nenhum email cadastrado. Cadastre um email primeiro.");
-            return;
-        }
+            int opcao = lerInteiro("Escolha: ");
 
-        System.out.println("Emails disponíveis:");
-        for (Email email : emails) {
-            System.out.println("ID: " + email.getIdEmail() + " - " + email.getEmail());
-        }
-
-        System.out.print("ID do email: ");
-        int idEmail = lerInteiro();
-
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Telefone: ");
-        String telefone = scanner.nextLine();
-
-        System.out.print("CPF: ");
-        String cpf = scanner.nextLine();
-
-        try {
-            Aluno aluno = controlador.cadastrarAluno(nome, telefone, idEmail, cpf);
-            System.out.println("✅ Aluno cadastrado com sucesso! ID: " + aluno.getIdAlunos());
-        } catch (Exception e) {
-            System.out.println("❌ Erro ao cadastrar aluno: " + e.getMessage());
-        }
-    }
-
-    private void listarTodosAlunos() {
-        System.out.println("\n📋 LISTA DE TODOS OS ALUNOS");
-        List<Aluno> alunos = controlador.listarTodosAlunos();
-
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
-        } else {
-            for (Aluno aluno : alunos) {
-                System.out.println("-----------------------------------");
-                System.out.println(aluno.toString());
+            switch (opcao) {
+                case 1 -> listarCursos();
+                case 2 -> listarCursosAtivos();
+                case 3 -> listarCursosInativos();
+                case 4 -> buscarCursoPorId();
+                case 5 -> buscarCursoPorNome();
+                case 6 -> cadastrarCurso();
+                case 7 -> atualizarCurso();
+                case 8 -> ativarDesativarCurso();
+                case 9 -> excluirCurso();
+                case 0 -> { return; }
+                default -> System.err.println("Opção inválida!");
             }
+        }
+    }
+
+    // 🎫 MENU MATRÍCULAS - CRUD ESPECIALIZADO
+    private void menuMatriculas() {
+        while (true) {
+            System.out.println("\nGESTÃO DE MATRÍCULAS");
+            System.out.println("1 - Listar todas as matrículas");
+            System.out.println("2 - Buscar matrícula por ID");
+            System.out.println("3 - Matricular aluno em curso");
+            System.out.println("4 - Buscar matrículas por aluno");
+            System.out.println("5 - Buscar matrículas por curso");
+            System.out.println("6 - Cancelar matrícula");
+            System.out.println("7 - Verificar se matrícula existe");
+            System.out.println("0 - Voltar ao menu principal");
+
+            int opcao = lerInteiro("Escolha: ");
+
+            switch (opcao) {
+                case 1 -> listarMatriculas();
+                case 2 -> buscarMatriculaPorId();
+                case 3 -> matricularAluno();
+                case 4 -> buscarMatriculasPorAluno();
+                case 5 -> buscarMatriculasPorCurso();
+                case 6 -> cancelarMatricula();
+                case 7 -> verificarMatriculaExistente();
+                case 0 -> { return; }
+                default -> System.err.println("Opção inválida!");
+            }
+        }
+    }
+
+    // 📧 MENU EMAILS - CRUD ESPECIALIZADO
+    private void menuEmails() {
+        while (true) {
+            System.out.println("\nGESTÃO DE EMAILS");
+            System.out.println("1 - Listar todos os emails");
+            System.out.println("2 - Buscar email por ID");
+            System.out.println("3 - Buscar email por endereço");
+            System.out.println("4 - Cadastrar novo email");
+            System.out.println("5 - Atualizar email");
+            System.out.println("6 - Excluir email");
+            System.out.println("0 - Voltar ao menu principal");
+
+            int opcao = lerInteiro("Escolha: ");
+
+            switch (opcao) {
+                case 1 -> listarEmails();
+                case 2 -> buscarEmailPorId();
+                case 3 -> buscarEmailPorEndereco();
+                case 4 -> cadastrarEmail();
+                case 5 -> atualizarEmail();
+                case 6 -> excluirEmail();
+                case 0 -> { return; }
+                default -> System.err.println("Opção inválida!");
+            }
+        }
+    }
+
+    // ✅ MÉTODOS PARA ALUNOS - BAIXO ACOPLAMENTO
+    private void listarAlunos() {
+        try {
+            List<Aluno> alunos = controller.getAlunoController().listarTodos();
+            System.out.println("\nLISTA DE ALUNOS:");
+            if (alunos.isEmpty()) {
+                System.out.println("Nenhum aluno cadastrado.");
+            } else {
+                alunos.forEach(aluno ->
+                        System.out.printf("ID: %d | Nome: %s | CPF: %s | Telefone: %s%n",
+                                aluno.getIdAlunos(), aluno.getNome(), aluno.getCpf(), aluno.getTelefone())
+                );
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar alunos: " + e.getMessage());
         }
     }
 
     private void buscarAlunoPorId() {
-        System.out.println("\n🔍 BUSCAR ALUNO POR ID");
-        System.out.print("Digite o ID do aluno: ");
-        int id = lerInteiro();
+        try {
+            int id = lerInteiro("ID do aluno: ");
+            Aluno aluno = controller.getAlunoController().buscarPorId(id);
+            if (aluno != null) {
+                System.out.println("Aluno encontrado:");
+                System.out.printf("ID: %d | Nome: %s | CPF: %s | Telefone: %s%n",
+                        aluno.getIdAlunos(), aluno.getNome(), aluno.getCpf(), aluno.getTelefone());
+            } else {
+                System.err.println("Aluno não encontrado.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar aluno: " + e.getMessage());
+        }
+    }
 
-        Aluno aluno = controlador.buscarAlunoPorId(id);
-        if (aluno != null) {
-            System.out.println("✅ Aluno encontrado:");
-            System.out.println(aluno.toString());
-        } else {
-            System.out.println("❌ Aluno não encontrado!");
+    private void cadastrarAluno() {
+        try {
+            System.out.println("\nCADASTRAR NOVO ALUNO:");
+            String nome = lerString("Nome: ");
+            String telefone = lerString("Telefone: ");
+            String cpf = lerString("CPF (apenas números): ");
+            String email = lerString("Email: ");
+
+            Aluno aluno = controller.getAlunoController().matricularAlunoComEmail(nome, telefone, cpf, email);
+            System.out.println("Aluno cadastrado com sucesso! ID: " + aluno.getIdAlunos());
+        } catch (Exception e) {
+            System.err.println("Erro ao cadastrar aluno: " + e.getMessage());
         }
     }
 
     private void buscarAlunoPorCpf() {
-        System.out.println("\n🔍 BUSCAR ALUNO POR CPF");
-        System.out.print("Digite o CPF: ");
-        String cpf = scanner.nextLine();
-
-        Aluno aluno = controlador.buscarAlunoPorCpf(cpf);
-        if (aluno != null) {
-            System.out.println("✅ Aluno encontrado:");
-            System.out.println(aluno.toString());
-        } else {
-            System.out.println("❌ Aluno não encontrado!");
-        }
-    }
-
-    private void buscarAlunosPorNome() {
-        System.out.println("\n🔎 BUSCAR ALUNOS POR NOME");
-        System.out.print("Digite o nome (ou parte): ");
-        String nome = scanner.nextLine();
-
-        List<Aluno> alunos = controlador.buscarAlunosPorNome(nome);
-
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno encontrado com o nome: " + nome);
-        } else {
-            System.out.println("Alunos encontrados:");
-            for (Aluno aluno : alunos) {
-                System.out.println("-----------------------------------");
-                System.out.println(aluno.toString());
+        try {
+            String cpf = lerString("CPF do aluno: ");
+            Aluno aluno = controller.getAlunoController().buscarPorCpf(cpf);
+            if (aluno != null) {
+                System.out.println("Aluno encontrado:");
+                System.out.printf("ID: %d | Nome: %s | CPF: %s | Telefone: %s%n",
+                        aluno.getIdAlunos(), aluno.getNome(), aluno.getCpf(), aluno.getTelefone());
+            } else {
+                System.out.println("Aluno não encontrado.");
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar aluno por CPF: " + e.getMessage());
         }
     }
 
     private void atualizarAluno() {
-        System.out.println("\n📝 ATUALIZAR ALUNO");
-        System.out.print("Digite o ID do aluno a ser atualizado: ");
-        int id = lerInteiro();
-
-        Aluno aluno = controlador.buscarAlunoPorId(id);
-        if (aluno == null) {
-            System.out.println("❌ Aluno não encontrado!");
-            return;
-        }
-
-        System.out.println("Aluno atual: " + aluno.toString());
-        System.out.print("Novo nome (enter para manter atual): ");
-        String novoNome = scanner.nextLine();
-        if (!novoNome.trim().isEmpty()) {
-            aluno.setNome(novoNome);
-        }
-
-        System.out.print("Novo telefone (enter para manter atual): ");
-        String novoTelefone = scanner.nextLine();
-        if (!novoTelefone.trim().isEmpty()) {
-            aluno.setTelefone(novoTelefone);
-        }
-
-        System.out.print("Novo CPF (enter para manter atual): ");
-        String novoCpf = scanner.nextLine();
-        if (!novoCpf.trim().isEmpty()) {
-            aluno.setCpf(novoCpf);
-        }
-
         try {
-            if (controlador.atualizarAluno(aluno)) {
-                System.out.println("✅ Aluno atualizado com sucesso!");
+            int id = lerInteiro("ID do aluno a ser atualizado: ");
+            Aluno alunoExistente = controller.getAlunoController().buscarPorId(id);
+
+            if (alunoExistente == null) {
+                System.err.println("Aluno não encontrado.");
+                return;
+            }
+
+            System.out.println("Deixe em branco para manter o valor atual:");
+            String nome = lerStringOpcional("Novo nome [" + alunoExistente.getNome() + "]: ");
+            String telefone = lerStringOpcional("Novo telefone [" + alunoExistente.getTelefone() + "]: ");
+
+            if (!nome.isEmpty()) alunoExistente.setNome(nome);
+            if (!telefone.isEmpty()) alunoExistente.setTelefone(telefone);
+
+            boolean sucesso = controller.getAlunoController().atualizar(alunoExistente);
+            if (sucesso) {
+                System.out.println("Aluno atualizado com sucesso!");
             } else {
-                System.out.println("❌ Erro ao atualizar aluno!");
+                System.err.println("Falha ao atualizar aluno.");
             }
         } catch (Exception e) {
-            System.out.println("❌ Erro: " + e.getMessage());
+            System.err.println("Erro ao atualizar aluno: " + e.getMessage());
         }
     }
 
     private void excluirAluno() {
-        System.out.println("\n❌ EXCLUIR ALUNO");
-        System.out.print("Digite o ID do aluno a ser excluído: ");
-        int id = lerInteiro();
-
-        System.out.print("⚠️  Tem certeza que deseja excluir o aluno? (s/n): ");
-        String confirmacao = scanner.nextLine();
-
-        if (confirmacao.equalsIgnoreCase("s")) {
-            try {
-                if (controlador.excluirAluno(id)) {
-                    System.out.println("✅ Aluno excluído com sucesso!");
-                } else {
-                    System.out.println("❌ Erro ao excluir aluno!");
-                }
-            } catch (Exception e) {
-                System.out.println("❌ Erro: " + e.getMessage());
-            }
-        }
-    }
-
-    // ========== MENU EMAILS ==========
-    private void menuEmails() {
-        int opcao;
-        do {
-            System.out.println("\n📧 MENU EMAILS");
-            System.out.println("==================");
-            System.out.println("1. ➕ Cadastrar Email");
-            System.out.println("2. 📋 Listar Todos os Emails");
-            System.out.println("3. 🔍 Buscar Email por ID");
-            System.out.println("4. 🔍 Buscar Email por Endereço");
-            System.out.println("5. 📝 Atualizar Email");
-            System.out.println("6. ❌ Excluir Email");
-            System.out.println("0. ↩️ Voltar");
-            System.out.println("==================");
-            System.out.print("Escolha uma opção: ");
-
-            opcao = lerInteiro();
-
-            switch (opcao) {
-                case 1 -> cadastrarEmail();
-                case 2 -> listarTodosEmails();
-                case 3 -> buscarEmailPorId();
-                case 4 -> buscarEmailPorEndereco();
-                case 5 -> atualizarEmail();
-                case 6 -> excluirEmail();
-                case 0 -> System.out.println("Voltando ao menu principal...");
-                default -> System.out.println("❌ Opção inválida!");
-            }
-        } while (opcao != 0);
-    }
-
-    private void cadastrarEmail() {
-        System.out.println("\n➕ CADASTRAR EMAIL");
-        System.out.print("Endereço de email: ");
-        String endereco = scanner.nextLine();
-
         try {
-            Email email = controlador.cadastrarEmail(endereco);
-            System.out.println("✅ Email cadastrado com sucesso! ID: " + email.getIdEmail());
+            int id = lerInteiro("ID do aluno a ser excluído: ");
+            boolean sucesso = controller.getAlunoController().excluir(id);
+            if (sucesso) {
+                System.out.println("Aluno excluído com sucesso!");
+            } else {
+                System.err.println("Falha ao excluir aluno.");
+            }
         } catch (Exception e) {
-            System.out.println("❌ Erro ao cadastrar email: " + e.getMessage());
+            System.err.println("Erro ao excluir aluno: " + e.getMessage());
         }
     }
 
-    private void listarTodosEmails() {
-        System.out.println("\n📋 LISTA DE TODOS OS EMAILS");
-        List<Email> emails = controlador.listarTodosEmails();
-
-        if (emails.isEmpty()) {
-            System.out.println("Nenhum email cadastrado.");
-        } else {
-            for (Email email : emails) {
-                System.out.println("ID: " + email.getIdEmail() + " - " + email.getEmail());
-            }
-        }
-    }
-
-    private void buscarEmailPorId() {
-        System.out.println("\n🔍 BUSCAR EMAIL POR ID");
-        System.out.print("Digite o ID do email: ");
-        int id = lerInteiro();
-
-        Email email = controlador.buscarEmailPorId(id);
-        if (email != null) {
-            System.out.println("✅ Email encontrado:");
-            System.out.println("ID: " + email.getIdEmail() + " - " + email.getEmail());
-        } else {
-            System.out.println("❌ Email não encontrado!");
-        }
-    }
-
-    private void buscarEmailPorEndereco() {
-        System.out.println("\n🔍 BUSCAR EMAIL POR ENDEREÇO");
-        System.out.print("Digite o endereço de email: ");
-        String endereco = scanner.nextLine();
-
-        Email email = controlador.buscarEmailPorEndereco(endereco);
-        if (email != null) {
-            System.out.println("✅ Email encontrado:");
-            System.out.println("ID: " + email.getIdEmail() + " - " + email.getEmail());
-        } else {
-            System.out.println("❌ Email não encontrado!");
-        }
-    }
-
-    private void atualizarEmail() {
-        System.out.println("\n📝 ATUALIZAR EMAIL");
-        System.out.print("Digite o ID do email a ser atualizado: ");
-        int id = lerInteiro();
-
-        Email email = controlador.buscarEmailPorId(id);
-        if (email == null) {
-            System.out.println("❌ Email não encontrado!");
-            return;
-        }
-
-        System.out.println("Email atual: " + email.getEmail());
-        System.out.print("Novo endereço de email: ");
-        String novoEndereco = scanner.nextLine();
-
-        if (!novoEndereco.trim().isEmpty()) {
-            email.setEmail(novoEndereco);
-
-            try {
-                if (controlador.atualizarEmail(email)) {
-                    System.out.println("✅ Email atualizado com sucesso!");
-                } else {
-                    System.out.println("❌ Erro ao atualizar email!");
-                }
-            } catch (Exception e) {
-                System.out.println("❌ Erro: " + e.getMessage());
-            }
-        }
-    }
-
-    private void excluirEmail() {
-        System.out.println("\n❌ EXCLUIR EMAIL");
-        System.out.print("Digite o ID do email a ser excluído: ");
-        int id = lerInteiro();
-
-        System.out.print("⚠️  Tem certeza que deseja excluir o email? (s/n): ");
-        String confirmacao = scanner.nextLine();
-
-        if (confirmacao.equalsIgnoreCase("s")) {
-            try {
-                if (controlador.excluirEmail(id)) {
-                    System.out.println("✅ Email excluído com sucesso!");
-                } else {
-                    System.out.println("❌ Erro ao excluir email!");
-                }
-            } catch (Exception e) {
-                System.out.println("❌ Erro: " + e.getMessage());
-            }
-        }
-    }
-
-    // ========== MENU MATRÍCULAS ==========
-    private void menuMatriculas() {
-        int opcao;
-        do {
-            System.out.println("\n📋 MENU MATRÍCULAS");
-            System.out.println("==================");
-            System.out.println("1. ➕ Nova Matrícula");
-            System.out.println("2. 📋 Listar Todas as Matrículas");
-            System.out.println("3. 🔍 Buscar Matrícula por ID");
-            System.out.println("4. 👨‍🎓 Listar Matrículas por Aluno");
-            System.out.println("5. 📚 Listar Matrículas por Curso");
-            System.out.println("6. 🗑️  Cancelar Matrícula");
-            System.out.println("7. 🔢 Contar Matrículas por Curso");
-            System.out.println("8. 🔢 Contar Matrículas por Aluno");
-            System.out.println("0. ↩️ Voltar");
-            System.out.println("==================");
-            System.out.print("Escolha uma opção: ");
-
-            opcao = lerInteiro();
-
-            switch (opcao) {
-                case 1 -> novaMatricula();
-                case 2 -> listarTodasMatriculas();
-                case 3 -> buscarMatriculaPorId();
-                case 4 -> listarMatriculasPorAluno();
-                case 5 -> listarMatriculasPorCurso();
-                case 6 -> cancelarMatricula();
-                case 7 -> contarMatriculasPorCurso();
-                case 8 -> contarMatriculasPorAluno();
-                case 0 -> System.out.println("Voltando ao menu principal...");
-                default -> System.out.println("❌ Opção inválida!");
-            }
-        } while (opcao != 0);
-    }
-
-    private void novaMatricula() {
-        System.out.println("\n➕ NOVA MATRÍCULA");
-
-        // Listar alunos
-        List<Aluno> alunos = controlador.listarTodosAlunos();
-        if (alunos.isEmpty()) {
-            System.out.println("❌ Nenhum aluno cadastrado. Cadastre um aluno primeiro.");
-            return;
-        }
-
-        System.out.println("Alunos disponíveis:");
-        for (Aluno aluno : alunos) {
-            System.out.println("ID: " + aluno.getIdAlunos() + " - " + aluno.getNome());
-        }
-
-        System.out.print("ID do aluno: ");
-        int idAluno = lerInteiro();
-
-        // Listar cursos ativos
-        List<Cursos> cursos = controlador.listarCursosAtivos();
-        if (cursos.isEmpty()) {
-            System.out.println("❌ Nenhum curso ativo disponível.");
-            return;
-        }
-
-        System.out.println("Cursos ativos disponíveis:");
-        for (Cursos curso : cursos) {
-            System.out.println("ID: " + curso.getIdCursos() + " - " + curso.getNome() + " (" + curso.getTipo() + ")");
-        }
-
-        System.out.print("ID do curso: ");
-        int idCurso = lerInteiro();
-
+    private void validarAlunoParaMatricula() {
         try {
-            Matricula matricula = controlador.matricularAluno(idAluno, idCurso);
-            System.out.println("✅ Matrícula realizada com sucesso! ID: " + matricula.getIdMatricula());
+            int id = lerInteiro("ID do aluno: ");
+            boolean valido = controller.getAlunoController().validarAlunoParaMatricula(id);
+            if (valido) {
+                System.out.println("Aluno válido para matrícula!");
+            } else {
+                System.err.println("Aluno não está válido para matrícula.");
+            }
         } catch (Exception e) {
-            System.out.println("❌ Erro ao realizar matrícula: " + e.getMessage());
+            System.err.println("Erro ao validar aluno: " + e.getMessage());
         }
     }
 
-    private void listarTodasMatriculas() {
-        System.out.println("\n📋 LISTA DE TODAS AS MATRÍCULAS");
-        List<Matricula> matriculas = controlador.listarTodasMatriculas();
-
-        if (matriculas.isEmpty()) {
-            System.out.println("Nenhuma matrícula cadastrada.");
-        } else {
-            for (Matricula matricula : matriculas) {
-                System.out.println("-----------------------------------");
-                System.out.println(matricula.toString());
+    // ✅ MÉTODOS PARA CURSOS
+    private void listarCursos() {
+        try {
+            List<Cursos> cursos = controller.getCursoController().listarTodos();
+            System.out.println("\nLISTA DE CURSOS:");
+            if (cursos.isEmpty()) {
+                System.out.println("Nenhum curso cadastrado.");
+            } else {
+                cursos.forEach(curso ->
+                        System.out.printf("ID: %d | Nome: %s | Tipo: %s | Status: %s%n",
+                                curso.getIdCursos(), curso.getNome(), curso.getTipo(),
+                                curso.isAtivação() ? "Ativo" : "Inativo")
+                );
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar cursos: " + e.getMessage());
+        }
+    }
+
+    private void cadastrarCurso() {
+        try {
+            System.out.println("\nCADASTRAR NOVO CURSO:");
+            String nome = lerString("Nome do curso: ");
+            String tipo = lerString("Tipo do curso: ");
+
+            Cursos curso = new Cursos(0, nome, tipo, true);
+            Cursos cursoCriado = controller.getCursoController().criar(curso);
+            System.out.println("Curso cadastrado com sucesso! ID: " + cursoCriado.getIdCursos());
+        } catch (Exception e) {
+            System.err.println("Erro ao cadastrar curso: " + e.getMessage());
+        }
+    }
+
+    private void buscarCursoPorId() {
+        try {
+            int id = lerInteiro("ID do curso: ");
+            Cursos curso = controller.getCursoController().buscarPorId(id);
+            if (curso != null) {
+                System.out.println("Curso encontrado:");
+                System.out.printf("ID: %d | Nome: %s | Tipo: %s | Status: %s%n",
+                        curso.getIdCursos(), curso.getNome(), curso.getTipo(),
+                        curso.isAtivação() ? "Ativo" : "Inativo");
+            } else {
+                System.err.println("Curso não encontrado.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar curso: " + e.getMessage());
+        }
+    }
+
+    private void buscarCursoPorNome() {
+        try {
+            String nome = lerString("Nome do curso: ");
+            Cursos curso = controller.getCursoController().buscarPorNome(nome);
+            if (curso != null) {
+                System.out.println("Curso encontrado:");
+                System.out.printf("ID: %d | Nome: %s | Tipo: %s | Status: %s%n",
+                        curso.getIdCursos(), curso.getNome(), curso.getTipo(),
+                        curso.isAtivação() ? "Ativo" : "Inativo");
+            } else {
+                System.err.println("Curso não encontrado.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar curso por nome: " + e.getMessage());
+        }
+    }
+
+    private void listarCursosAtivos() {
+        try {
+            List<Cursos> cursos = controller.getCursoController().listarAtivos();
+            System.out.println("\nCURSOS ATIVOS:");
+            if (cursos.isEmpty()) {
+                System.out.println("Nenhum curso ativo.");
+            } else {
+                cursos.forEach(curso ->
+                        System.out.printf("ID: %d | Nome: %s | Tipo: %s%n",
+                                curso.getIdCursos(), curso.getNome(), curso.getTipo())
+                );
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar cursos ativos: " + e.getMessage());
+        }
+    }
+
+    private void listarCursosInativos() {
+        try {
+            List<Cursos> cursos = controller.getCursoController().listarInativos();
+            System.out.println("\nCURSOS INATIVOS:");
+            if (cursos.isEmpty()) {
+                System.out.println("Nenhum curso inativo.");
+            } else {
+                cursos.forEach(curso ->
+                        System.out.printf("ID: %d | Nome: %s | Tipo: %s%n",
+                                curso.getIdCursos(), curso.getNome(), curso.getTipo())
+                );
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar cursos inativos: " + e.getMessage());
+        }
+    }
+
+    private void ativarDesativarCurso() {
+        try {
+            int id = lerInteiro("ID do curso: ");
+            Cursos curso = controller.getCursoController().buscarPorId(id);
+
+            if (curso == null) {
+                System.err.println("Curso não encontrado.");
+                return;
+            }
+
+            System.out.println("Status atual: " + (curso.isAtivação() ? "Ativo" : "Inativo"));
+            System.out.println("1 - Ativar curso");
+            System.out.println("2 - Desativar curso");
+            int opcao = lerInteiro("Escolha: ");
+
+            boolean sucesso = false;
+            if (opcao == 1) {
+                sucesso = controller.getCursoController().ativarCurso(id);
+            } else if (opcao == 2) {
+                sucesso = controller.getCursoController().desativarCurso(id);
+            } else {
+                System.err.println("Opção inválida.");
+                return;
+            }
+
+            if (sucesso) {
+                System.out.println("Status do curso atualizado com sucesso!");
+            } else {
+                System.err.println("Falha ao atualizar status do curso.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao alterar status do curso: " + e.getMessage());
+        }
+    }
+
+    private void atualizarCurso() {
+        try {
+            int id = lerInteiro("ID do curso a ser atualizado: ");
+            Cursos cursoExistente = controller.getCursoController().buscarPorId(id);
+
+            if (cursoExistente == null) {
+                System.err.println("Curso não encontrado.");
+                return;
+            }
+
+            System.out.println("Deixe em branco para manter o valor atual:");
+            String nome = lerStringOpcional("Novo nome [" + cursoExistente.getNome() + "]: ");
+            String tipo = lerStringOpcional("Novo tipo [" + cursoExistente.getTipo() + "]: ");
+
+            if (!nome.isEmpty()) cursoExistente.setNome(nome);
+            if (!tipo.isEmpty()) cursoExistente.setTipo(tipo);
+
+            boolean sucesso = controller.getCursoController().atualizar(cursoExistente);
+            if (sucesso) {
+                System.out.println("Curso atualizado com sucesso!");
+            } else {
+                System.err.println("Falha ao atualizar curso.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar curso: " + e.getMessage());
+        }
+    }
+
+    private void excluirCurso() {
+        try {
+            int id = lerInteiro("ID do curso a ser excluído: ");
+            boolean sucesso = controller.getCursoController().excluir(id);
+            if (sucesso) {
+                System.out.println("Curso excluído com sucesso!");
+            } else {
+                System.err.println("Falha ao excluir curso.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao excluir curso: " + e.getMessage());
+        }
+    }
+
+    // ✅ MÉTODOS PARA MATRÍCULAS
+    private void listarMatriculas() {
+        try {
+            List<Matricula> matriculas = controller.getMatriculaController().listarTodos();
+            System.out.println("\nLISTA DE MATRÍCULAS:");
+            if (matriculas.isEmpty()) {
+                System.out.println("Nenhuma matrícula cadastrada.");
+            } else {
+                matriculas.forEach(matricula ->
+                        System.out.printf("ID: %d | Aluno ID: %d | Curso ID: %d%n",
+                                matricula.getIdMatricula(), matricula.getAluno(), matricula.getCurso())
+                );
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar matrículas: " + e.getMessage());
+        }
+    }
+
+    private void matricularAluno() {
+        try {
+            System.out.println("\nMATRICULAR ALUNO EM CURSO:");
+            int idAluno = lerInteiro("ID do aluno: ");
+            int idCurso = lerInteiro("ID do curso: ");
+
+            Matricula matricula = controller.getMatriculaController().matricularAluno(idAluno, idCurso);
+            System.out.println("Matrícula realizada com sucesso! ID: " + matricula.getIdMatricula());
+        } catch (Exception e) {
+            System.err.println("Erro ao matricular aluno: " + e.getMessage());
         }
     }
 
     private void buscarMatriculaPorId() {
-        System.out.println("\n🔍 BUSCAR MATRÍCULA POR ID");
-        System.out.print("Digite o ID da matrícula: ");
-        int id = lerInteiro();
-
-        Matricula matricula = controlador.buscarMatriculaPorId(id);
-        if (matricula != null) {
-            System.out.println("✅ Matrícula encontrada:");
-            System.out.println(matricula.toString());
-        } else {
-            System.out.println("❌ Matrícula não encontrada!");
+        try {
+            int id = lerInteiro("ID da matrícula: ");
+            Matricula matricula = controller.getMatriculaController().buscarPorId(id);
+            if (matricula != null) {
+                System.out.println("Matrícula encontrada:");
+                System.out.printf("ID: %d | Aluno ID: %d | Curso ID: %d%n",
+                        matricula.getIdMatricula(), matricula.getAluno(), matricula.getCurso());
+            } else {
+                System.err.println("Matrícula não encontrada.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar matrícula: " + e.getMessage());
         }
     }
 
-    private void listarMatriculasPorAluno() {
-        System.out.println("\n👨‍🎓 MATRÍCULAS POR ALUNO");
-        System.out.print("Digite o ID do aluno: ");
-        int idAluno = lerInteiro();
-
-        List<Matricula> matriculas = controlador.listarMatriculasPorAluno(idAluno);
-
-        if (matriculas.isEmpty()) {
-            System.out.println("Nenhuma matrícula encontrada para este aluno.");
-        } else {
-            System.out.println("Matrículas do aluno:");
-            for (Matricula matricula : matriculas) {
-                System.out.println("-----------------------------------");
-                System.out.println(matricula.toString());
+    private void buscarMatriculasPorAluno() {
+        try {
+            int idAluno = lerInteiro("ID do aluno: ");
+            List<Matricula> matriculas = controller.getMatriculaController().buscarPorAluno(idAluno);
+            System.out.println("\nMATRÍCULAS DO ALUNO " + idAluno + ":");
+            if (matriculas.isEmpty()) {
+                System.out.println("Nenhuma matrícula encontrada.");
+            } else {
+                matriculas.forEach(matricula ->
+                        System.out.printf("ID Matrícula: %d | Curso ID: %d%n",
+                                matricula.getIdMatricula(), matricula.getCurso())
+                );
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar matrículas por aluno: " + e.getMessage());
         }
     }
 
-    private void listarMatriculasPorCurso() {
-        System.out.println("\n📚 MATRÍCULAS POR CURSO");
-        System.out.print("Digite o ID do curso: ");
-        int idCurso = lerInteiro();
-
-        List<Matricula> matriculas = controlador.listarMatriculasPorCurso(idCurso);
-
-        if (matriculas.isEmpty()) {
-            System.out.println("Nenhuma matrícula encontrada para este curso.");
-        } else {
-            System.out.println("Matrículas do curso:");
-            for (Matricula matricula : matriculas) {
-                System.out.println("-----------------------------------");
-                System.out.println(matricula.toString());
+    private void buscarMatriculasPorCurso() {
+        try {
+            int idCurso = lerInteiro("ID do curso: ");
+            List<Matricula> matriculas = controller.getMatriculaController().buscarPorCurso(idCurso);
+            System.out.println("\nMATRÍCULAS DO CURSO " + idCurso + ":");
+            if (matriculas.isEmpty()) {
+                System.out.println("Nenhuma matrícula encontrada.");
+            } else {
+                matriculas.forEach(matricula ->
+                        System.out.printf("ID Matrícula: %d | Aluno ID: %d%n",
+                                matricula.getIdMatricula(), matricula.getAluno())
+                );
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar matrículas por curso: " + e.getMessage());
         }
     }
 
     private void cancelarMatricula() {
-        System.out.println("\n🗑️  CANCELAR MATRÍCULA");
-        System.out.print("Digite o ID da matrícula a ser cancelada: ");
-        int id = lerInteiro();
-
-        System.out.print("⚠️  Tem certeza que deseja cancelar a matrícula? (s/n): ");
-        String confirmacao = scanner.nextLine();
-
-        if (confirmacao.equalsIgnoreCase("s")) {
-            try {
-                if (controlador.cancelarMatricula(id)) {
-                    System.out.println("✅ Matrícula cancelada com sucesso!");
-                } else {
-                    System.out.println("❌ Erro ao cancelar matrícula!");
-                }
-            } catch (Exception e) {
-                System.out.println("❌ Erro: " + e.getMessage());
+        try {
+            int id = lerInteiro("ID da matrícula a ser cancelada: ");
+            boolean sucesso = controller.getMatriculaController().cancelarMatricula(id);
+            if (sucesso) {
+                System.out.println("Matrícula cancelada com sucesso!");
+            } else {
+                System.err.println("Falha ao cancelar matrícula.");
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao cancelar matrícula: " + e.getMessage());
         }
     }
 
-    private void contarMatriculasPorCurso() {
-        System.out.println("\n🔢 CONTAR MATRÍCULAS POR CURSO");
-        System.out.print("Digite o ID do curso: ");
-        int idCurso = lerInteiro();
-
-        int quantidade = controlador.contarMatriculasPorCurso(idCurso);
-        System.out.println("📊 Total de matrículas no curso: " + quantidade);
-    }
-
-    private void contarMatriculasPorAluno() {
-        System.out.println("\n🔢 CONTAR MATRÍCULAS POR ALUNO");
-        System.out.print("Digite o ID do aluno: ");
-        int idAluno = lerInteiro();
-
-        int quantidade = controlador.contarMatriculasPorAluno(idAluno);
-        System.out.println("📊 Total de matrículas do aluno: " + quantidade);
-    }
-
-    // ========== MENU RELATÓRIOS ==========
-    private void menuRelatorios() {
-        int opcao;
-        do {
-            System.out.println("\n📊 RELATÓRIOS");
-            System.out.println("==================");
-            System.out.println("1. 📈 Relatório Geral");
-            System.out.println("2. 📋 Relatório Completo de Cursos");
-            System.out.println("3. 👨‍🎓 Relatório Completo de Alunos");
-            System.out.println("4. 📧 Relatório de Emails");
-            System.out.println("5. 📋 Relatório de Matrículas");
-            System.out.println("0. ↩️ Voltar");
-            System.out.println("==================");
-            System.out.print("Escolha uma opção: ");
-
-            opcao = lerInteiro();
-
-            switch (opcao) {
-                case 1 -> relatorioGeral();
-                case 2 -> relatorioCursosCompleto();
-                case 3 -> relatorioAlunosCompleto();
-                case 4 -> relatorioEmails();
-                case 5 -> relatorioMatriculas();
-                case 0 -> System.out.println("Voltando ao menu principal...");
-                default -> System.out.println("❌ Opção inválida!");
+    private void verificarMatriculaExistente() {
+        try {
+            int idAluno = lerInteiro("ID do aluno: ");
+            int idCurso = lerInteiro("ID do curso: ");
+            boolean existe = controller.getMatriculaController().verificarMatriculaExistente(idAluno, idCurso);
+            if (existe) {
+                System.out.println("Matrícula já existe!");
+            } else {
+                System.err.println("Matrícula não existe.");
             }
-        } while (opcao != 0);
-    }
-
-    private void relatorioGeral() {
-        System.out.println("\n📈 RELATÓRIO GERAL DA PLATAFORMA");
-        System.out.println("=====================================");
-        System.out.println("Total de Alunos: " + controlador.listarTodosAlunos().size());
-        System.out.println("Total de Cursos: " + controlador.listarTodosCursos().size());
-        System.out.println("Total de Cursos Ativos: " + controlador.listarCursosAtivos().size());
-        System.out.println("Total de Cursos Inativos: " + controlador.listarCursosInativos().size());
-        System.out.println("Total de Matrículas: " + controlador.listarTodasMatriculas().size());
-        System.out.println("Total de Emails: " + controlador.listarTodosEmails().size());
-        System.out.println("=====================================");
-    }
-
-    private void relatorioCursosCompleto() {
-        System.out.println("\n📋 RELATÓRIO COMPLETO DE CURSOS");
-        List<Cursos> cursos = controlador.listarTodosCursos();
-
-        if (cursos.isEmpty()) {
-            System.out.println("Nenhum curso cadastrado.");
-        } else {
-            for (Cursos curso : cursos) {
-                System.out.println("-----------------------------------");
-                System.out.println(curso.toString());
-                int matriculas = controlador.contarMatriculasPorCurso(curso.getIdCursos());
-                System.out.println("Matrículas ativas: " + matriculas);
-            }
+        } catch (Exception e) {
+            System.err.println("Erro ao verificar matrícula: " + e.getMessage());
         }
     }
 
-    private void relatorioAlunosCompleto() {
-        System.out.println("\n👨‍🎓 RELATÓRIO COMPLETO DE ALUNOS");
-        List<Aluno> alunos = controlador.listarTodosAlunos();
-
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
-        } else {
-            for (Aluno aluno : alunos) {
-                System.out.println("-----------------------------------");
-                System.out.println(aluno.toString());
-                int matriculas = controlador.contarMatriculasPorAluno(aluno.getIdAlunos());
-                System.out.println("Total de matrículas: " + matriculas);
+    // ✅ MÉTODOS PARA EMAILS
+    private void listarEmails() {
+        try {
+            List<Email> emails = controller.getEmailController().listarTodos();
+            System.out.println("\nLISTA DE EMAILS:");
+            if (emails.isEmpty()) {
+                System.out.println("Nenhum email cadastrado.");
+            } else {
+                emails.forEach(email ->
+                        System.out.printf("ID: %d | Email: %s%n", email.getIdEmail(), email.getEmail())
+                );
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar emails: " + e.getMessage());
         }
     }
 
-    private void relatorioEmails() {
-        System.out.println("\n📧 RELATÓRIO DE EMAILS");
-        List<Email> emails = controlador.listarTodosEmails();
+    private void cadastrarEmail() {
+        try {
+            System.out.println("\nCADASTRAR NOVO EMAIL:");
+            String enderecoEmail = lerString("Endereço de email: ");
 
-        if (emails.isEmpty()) {
-            System.out.println("Nenhum email cadastrado.");
-        } else {
-            for (Email email : emails) {
-                System.out.println("ID: " + email.getIdEmail() + " - " + email.getEmail());
-            }
+            Email email = new Email(0, enderecoEmail);
+            Email emailCriado = controller.getEmailController().criar(email);
+            System.out.println("Email cadastrado com sucesso! ID: " + emailCriado.getIdEmail());
+        } catch (Exception e) {
+            System.err.println("Erro ao cadastrar email: " + e.getMessage());
         }
     }
 
-    private void relatorioMatriculas() {
-        System.out.println("\n📋 RELATÓRIO DE MATRÍCULAS");
-        List<Matricula> matriculas = controlador.listarTodasMatriculas();
-
-        if (matriculas.isEmpty()) {
-            System.out.println("Nenhuma matrícula cadastrada.");
-        } else {
-            for (Matricula matricula : matriculas) {
-                System.out.println("-----------------------------------");
-                System.out.println(matricula.toString());
-
-                // Buscar informações adicionais
-                Aluno aluno = controlador.buscarAlunoPorId(matricula.getAluno());
-                Cursos curso = controlador.buscarCursoPorId(matricula.getCurso());
-
-                if (aluno != null && curso != null) {
-                    System.out.println("Aluno: " + aluno.getNome());
-                    System.out.println("Curso: " + curso.getNome());
-                }
+    private void buscarEmailPorId() {
+        try {
+            int id = lerInteiro("ID do email: ");
+            Email email = controller.getEmailController().buscarPorId(id);
+            if (email != null) {
+                System.out.println("Email encontrado:");
+                System.out.printf("ID: %d | Email: %s%n", email.getIdEmail(), email.getEmail());
+            } else {
+                System.err.println("Email não encontrado.");
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar email: " + e.getMessage());
         }
     }
 
-    // ========== MÉTODO AUXILIAR ==========
-    private int lerInteiro() {
+    private void buscarEmailPorEndereco() {
+        try {
+            String endereco = lerString("Endereço de email: ");
+            Email email = controller.getEmailController().buscarEmailPorEndereco(endereco);
+            if (email != null) {
+                System.out.println("Email encontrado:");
+                System.out.printf("ID: %d | Email: %s%n", email.getIdEmail(), email.getEmail());
+            } else {
+                System.err.println("Email não encontrado.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar email por endereço: " + e.getMessage());
+        }
+    }
+
+    private void atualizarEmail() {
+        try {
+            int id = lerInteiro("ID do email a ser atualizado: ");
+            Email emailExistente = controller.getEmailController().buscarPorId(id);
+
+            if (emailExistente == null) {
+                System.err.println("Email não encontrado.");
+                return;
+            }
+
+            String novoEmail = lerString("Novo endereço de email: ");
+            emailExistente.setEmail(novoEmail);
+
+            boolean sucesso = controller.getEmailController().atualizar(emailExistente);
+            if (sucesso) {
+                System.out.println("Email atualizado com sucesso!");
+            } else {
+                System.err.println("Falha ao atualizar email.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar email: " + e.getMessage());
+        }
+    }
+
+    private void excluirEmail() {
+        try {
+            int id = lerInteiro("ID do email a ser excluído: ");
+            boolean sucesso = controller.getEmailController().excluir(id);
+            if (sucesso) {
+                System.out.println("Email excluído com sucesso!");
+            } else {
+                System.err.println("Falha ao excluir email.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao excluir email: " + e.getMessage());
+        }
+    }
+
+    // 🎯 MÉTODOS ESPECIAIS DO CONTROLLER PRINCIPAL
+    private void realizarMatriculaCompleta() {
+        try {
+            System.out.println("\nMATRÍCULA COMPLETA");
+            String nomeAluno = lerString("Nome do aluno: ");
+            String telefone = lerString("Telefone: ");
+            String cpf = lerString("CPF (apenas números): ");
+            String email = lerString("Email: ");
+            String nomeCurso = lerString("Nome do curso: ");
+
+            controller.realizarMatriculaCompleta(nomeAluno, telefone, cpf, email, nomeCurso);
+            System.out.println("Matrícula completa realizada com sucesso!");
+        } catch (Exception e) {
+            System.err.println("Erro na matrícula completa: " + e.getMessage());
+        }
+    }
+
+    private void gerarRelatorio() {
+        try {
+            controller.gerarRelatorioMatriculas();
+        } catch (Exception e) {
+            System.err.println("Erro ao gerar relatório: " + e.getMessage());
+        }
+    }
+
+    // 🔧 MÉTODOS AUXILIARES - ALTA COESÃO
+    private int lerInteiro(String mensagem) {
         while (true) {
             try {
-                return Integer.parseInt(scanner.nextLine());
+                System.out.print(mensagem);
+                return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.print("❌ Por favor, digite um número válido: ");
+                System.err.println("Por favor, digite um número válido.");
             }
         }
+    }
+
+    private String lerString(String mensagem) {
+        System.out.print(mensagem);
+        return scanner.nextLine().trim();
+    }
+
+    private String lerStringOpcional(String mensagem) {
+        System.out.print(mensagem);
+        String input = scanner.nextLine().trim();
+        return input.isEmpty() ? "" : input;
     }
 }
