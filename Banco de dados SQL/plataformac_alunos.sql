@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `plataformac` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `plataformac`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: plataformac
@@ -32,7 +34,7 @@ CREATE TABLE `alunos` (
   UNIQUE KEY `cpf` (`cpf`),
   KEY `FK_Email` (`Email`),
   CONSTRAINT `FK_Email` FOREIGN KEY (`Email`) REFERENCES `email` (`idEmail`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +43,7 @@ CREATE TABLE `alunos` (
 
 LOCK TABLES `alunos` WRITE;
 /*!40000 ALTER TABLE `alunos` DISABLE KEYS */;
+INSERT INTO `alunos` VALUES (1,'João Silva','11999998888',1,'111.222.333-44'),(2,'André Marcos','12345-6789',3,'12345678910'),(3,'João Silva','11987654321',1,'123.456.789-01'),(4,'Maria Oliveira','11976543210',2,'234.567.890-12'),(5,'Pedro Santos','11965432109',3,'345.678.901-23'),(6,'Ana Costa','11954321098',4,'456.789.012-34'),(7,'Carlos Rodrigues','11943210987',5,'567.890.123-45');
 /*!40000 ALTER TABLE `alunos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-31 18:42:01
+-- Dump completed on 2025-11-13  8:07:37

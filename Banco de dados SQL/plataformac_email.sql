@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `plataformac` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `plataformac`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: plataformac
@@ -27,7 +29,7 @@ CREATE TABLE `email` (
   `Email` varchar(200) NOT NULL,
   PRIMARY KEY (`idEmail`),
   UNIQUE KEY `idEmail_UNIQUE` (`idEmail`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,6 +38,7 @@ CREATE TABLE `email` (
 
 LOCK TABLES `email` WRITE;
 /*!40000 ALTER TABLE `email` DISABLE KEYS */;
+INSERT INTO `email` VALUES (1,'joao.silva.novo@email.com'),(2,'maria.souza@email.com'),(3,'andremarcos@gmail.com'),(4,'joao.silva@example.com'),(5,'maria.oliveira@example.com'),(6,'pedro.santos@example.com'),(7,'ana.costa@example.com'),(8,'carlos.rodrigues@example.com');
 /*!40000 ALTER TABLE `email` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-31 18:42:00
+-- Dump completed on 2025-11-13  8:07:37
